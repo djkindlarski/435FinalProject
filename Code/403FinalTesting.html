@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+    <meta author="Joe Vossel, David Kindlarski" content="403 Final" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Vossel/Kindlarski 403 Final Tester</title> <!-- this is the title of the webpage-->
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        #version 300 es
+        
+        in vec4 aPosition;
+        in vec4 aColor;
+        in vec2 aTexCoord;
+
+        
+        out vec4 vColor;
+        out vec2 vTexCoord;
+
+        
+        uniform mat4 projection;
+        uniform mat4 transformation;
+        
+        void main()
+        {
+            gl_Position = projection*transformation*aPosition;
+            vColor=aColor;
+            vTexCoord = aTexCoord;
+        }
+
+
+        </script>
+        
+        <script id="fragment-shader" type="x-shader/x-fragment">
+        #version 300 es
+        
+        precision mediump float;
+        
+        in vec4 vColor;
+        in vec4 aPosition;
+        in vec2 vTexCoord;
+
+        
+        out vec4 fColor;
+
+        uniform sampler2D uTextureMap;
+
+
+        uniform mat4 projection;
+        uniform mat4 transformation;
+        
+        void main()
+        {
+            fColor = texture(uTextureMap, vTexCoord);
+        }
+        </script>
+
+    <link rel="stylesheet" href="opensans.css">
+    <style>
+        h1,
+		h2,
+        h3 {
+            /* text alignment style */
+            text-align: center;
+        }
+        p {
+            text-align: left;
+            font-size: 15pt;
+        }
+
+        main {
+            margin-left: 20em;
+            margin-right: 20em;
+        }
+
+        body {
+            /* change the color if you want */
+            background-color: #ffffff;
+            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+        	
+        }
+
+        sidebar {
+            background-color: #f1f1f1;
+        }
+
+        footer {
+            position:static;
+            left: 0;
+            bottom: 0;
+            padding: 14px 14px;
+            width: 100%;
+            font-size: 15px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+        }
+
+            /* PLAYING AROUND WITH LINKS */
+
+        .tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  position: fixed;
+  z-index: 3; /* Stay on top */
+  left: 0;
+  width: 340px;
+}
+		:root {
+    --white: #fff;
+	--color-ua-red: #9d2235;
+	--color-ua-dark-grey: #333f48;
+	--color-ua-light-grey: #7c878e;
+    --color-ua-border-color: #681313;
+    --color-sol-light-grey: #aaaaab;
+    --color-sol-med-grey: #5d5c5c;
+
+}
+
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 40px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+		.intro-text {
+    background-color: var(--color-sol-med-grey);
+    color: var(--white);
+    padding: 2rem 0;
+}
+  
+.container {
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.intro-text h1 {
+    font-size: 2.5rem;
+}
+
+            /* CONTROL THE COLOR OF YOUR LINKS IN THE FOOTER     */
+        footer a { 
+            color: white;
+        }
+        /* CONTROL THE COLOR OF YOUR LINKS AFTER YOU HAVE VISITED THEM */
+        footer a:visited {
+            color: rgb(188, 71, 218);
+        }
+        /* CONTROL THE COLOR OF YOUR LINKS WHEN YOUR HOVER OVER THEM */
+        footer a:hover {
+            color: crimson;
+        }
+
+        /* PLAYING WITH PHOTOS */
+
+        .photo {
+        /* USE THIS CODE TO THAT JUST CENTERS THE IMAGE WITH THE "photo" class */
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 15px;
+            
+            /* CODE TO DISPLAY MULTIPLE PHOTOS INLINE */
+             /* float: none; */
+             /* display: inline-block; */
+             /* margin-left: auto; */
+            /* margin-right: auto; */
+            /* width: 50%; */
+            /* padding: 15px; */
+        }
+
+            .sidebar {
+                height: 100%; /* Full-height: remove this if you want "auto" height */
+                width: 250px; /* Set the width of the sidebar */
+                position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+                z-index: 2; /* Stay on top */
+                top: 0.22; /* Stay at the top */
+                left: 0;
+                background-color: #d4d1d1; /* Black */
+                overflow-x: hidden; /* Disable horizontal scroll */
+                padding-top: 20px;
+            }
+    </style>
+
+<script src="initShaders.js"></script>
+<script src="MVnew.js"></script>
+<script src="403FinalTesting.js"></script>
+
+</head>
+
+<body>
+    <label id = "Input" style="position: absolute; top: 5%; left:40%;" hidden>Input:</label>
+    <label id = "Data" style="position: absolute; top: 10%; left:40%;" hidden>Data:</label>
+    <label id = "Output" style="position: absolute; top: 10%; left:43%;" textContent = '' hidden></label>
+    <label id = "Code" style="position: absolute; top: 10%; left:40%;" textContent = '' hidden></label>
+
+
+    <input style="position: absolute; top:5%; left:43.1%;" type="text" id="Box" name="Input Box" placeholder="" hidden>
+    <input id = "Submit" type="submit" value="Submit" style="position: absolute; top: 5%; left:54%;" onclick = "Submit()" hidden/><br>
+		<div class="tab">
+		  <button class="tablinks" onclick="render()">Blocks</button>
+		  <button class="tablinks" id = "CodeButton">Code</button>
+          <button id = "RunButton" class="tablinks" >Run</button>
+          
+<!--		  <button class="tablinks" onclick="">First Languages</button>-->
+<!--		  <button class="tablinks" onclick="">Etc.</button>-->
+		</div>
+
+
+        <canvas id="gl-canvas" width="1000" height="1000">
+            Oops ... your browser doesn't support the HTML5 canvas element
+        </canvas>
+
+       <!-- <canvas id="output-canvas" width="300" height="1000" style="border:1px solid #000000; left: 90%">
+            Oops ... your browser doesn't support the HTML5 canvas element
+        </canvas>-->
+
+
+
+        <img id = "varButton" src = "varButton.png" crossorigin='anonymous' hidden />
+        <img id = "boolButton" src = "boolButton.png" crossorigin='anonymous' hidden />
+        <img id = "doubleButton" src = "doubleButton.png" crossorigin='anonymous' hidden />
+        <img id = "constButton" src = "const.png" crossorigin='anonymous' hidden />
+        <img id = "thisButton" src = "this.png" crossorigin='anonymous' hidden />
+        <img id = "ifButton" src = "if.png" crossorigin='anonymous' hidden />
+        <img id = "elseIfButton" src = "elseIf.png" crossorigin='anonymous' hidden />
+        <img id = "elseButton" src = "else.png" crossorigin='anonymous' hidden />
+        <img id = "endIfButton" src = "endif.png" crossorigin='anonymous' hidden />
+        <img id = "endElseButton" src = "endelse.png" crossorigin='anonymous' hidden />
+        <img id = "forButton" src = "forButton.png" crossorigin='anonymous' hidden />
+        <img id = "whileButton" src = "while.png" crossorigin='anonymous' hidden />
+        <img id = "endLoopButton" src = "endLoop.png" crossorigin='anonymous' hidden />
+        <img id = "functionButton" src = "function.png" crossorigin='anonymous' hidden />
+        <img id = "endFunction" src = "endfunction.png" crossorigin='anonymous' hidden />
+        <img id = "printButton" src = "print.png" crossorigin='anonymous' hidden />
+        <img id = "returnButton" src = "return.png" crossorigin='anonymous' hidden />
+        <img id = "nullButton" src = "null.png" crossorigin='anonymous' hidden />
+        <img id = "trashbutton" src = "trash.png" crossorigin='anonymous' hidden />
+        <img id = "doButton" src = "do.png" crossorigin='anonymous' hidden />
+        <img id = "breakButton" src = "break.png" crossorigin='anonymous' hidden />
+
+
+</body>
+</html>
+    
